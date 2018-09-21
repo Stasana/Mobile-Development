@@ -1,4 +1,4 @@
-package develop.mobilelab;
+package c.e.a2lab;
 
 import org.junit.Test;
 
