@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case  R.id.say_hello:
                 text_with_name.setText("Hello, " + text_name.getText().toString());
                 text_name.getText().clear();
-
         }
     }
 

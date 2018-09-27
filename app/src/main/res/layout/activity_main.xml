@@ -36,15 +36,15 @@
 
         <Button
             android:id="@+id/clearable_button"
-            android:background="@color/colorSayHelloButton"
-            android:textColor="@color/colorSayHelloText"
-            android:layout_width="60dp"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="20dp"
             android:layout_height="25dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dip"
-            android:textSize="10dp"
-            android:text="Clear" />
+            android:background="@android:drawable/ic_delete"
+            android:textColor="@color/colorSayHelloText"
+            android:textSize="10dp" />
 
         <Button
             android:id="@+id/say_hello"
