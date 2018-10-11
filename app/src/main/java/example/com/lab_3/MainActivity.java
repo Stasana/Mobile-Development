@@ -16,6 +16,14 @@ import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity {
+    private static final String ERROR_INPUT_VALIDATION = "Please correctly fill out the field";
+    private static final String ERROR_CAPITAL_LETTER_VALIDATION = "First letter must be capital";
+    private static final String ERROR_EMAIL_VALIDATION = "Please enter a valid email";
+    private static final String ERROR_PHONE_VALIDATION = "Please enter a valid phone";
+    private static final String ERROR_WEAK_PASSWORD_VALIDATION = "Password too weak";
+    private static final String ERROR_MATCH_PASSWORD_VALIDATION = "Password doesn't match";
+    public static final String USERS_INFO_VALUE = "usersInfo";
+    public static final String USER_KEY_VALUE = "key";
 
     private static final Pattern NAME_PATTERN = Pattern.compile("[A-Z][a-z]+");
     private static final Pattern PASSWORD_PATTERN =
@@ -24,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
                     //"(?=.*[a-z])" +         //at least 1 lower case letter
                     //"(?=.*[A-Z])" +         //at least 1 upper case letter
                     "(?=.*[a-zA-Z])" +      //any letter
-                    "(?=.*[@#$%^&+=!_-])" +    //at least 1 special character
                     "(?=\\S+$)" +           //no white spaces
                     ".{4,}" +               //at least 4 characters
                     "$");
@@ -58,85 +65,92 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Button submitButton = findViewById(R.id.bSubmit);
+
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean validFirstName = validateFirstName();
-                boolean validLastName = validateLastName();
-                boolean validEmail = validateEmail();
-                boolean validPhone = validatePhone();
-                boolean validPassword = validatePassword();
-                boolean validSubmitPassword = validateSubmitPassword();
-                if (validFirstName && validLastName && validEmail && validPhone && validPassword && validSubmitPassword) {
-                    saveInfo();
-                    clearInputData();
-                }
-
+                isDataValid();
             }
         });
+
     }
 
-    private boolean validateFirstName() {
+    private boolean isDataValid() {
+        boolean validFirstName = isFirstNameValid();
+        boolean validLastName = isLastNameValid();
+        boolean validEmail = isEmailValid();
+        boolean validPhone = isPhoneValid();
+        boolean validPassword = isPasswordValid();
+        boolean validSubmitPassword = isSubmitPasswordValid();
+        if (validFirstName && validLastName && validEmail && validPhone && validPassword && validSubmitPassword) {
+            saveInfo();
+            clearInputData();
+
+        }
+        return true;
+    }
+
+    private boolean isFirstNameValid() {
         String firstName = firstNameEditText.getText().toString();
         if (firstName.isEmpty()) {
-            firstNameEditText.setError("Please correctly fill out the field");
+            firstNameEditText.setError(ERROR_INPUT_VALIDATION);
             return false;
         } else if (!NAME_PATTERN.matcher(firstName).matches()) {
-            firstNameEditText.setError("First letter must be capital");
+            firstNameEditText.setError(ERROR_CAPITAL_LETTER_VALIDATION);
             return false;
         } else {
             return true;
         }
     }
 
-    private boolean validateLastName() {
+    private boolean isLastNameValid() {
         String lastName = lastNameEditText.getText().toString();
         if (lastName.isEmpty()) {
-            lastNameEditText.setError("Please correctly fill out the field");
+            lastNameEditText.setError(ERROR_INPUT_VALIDATION);
             return false;
         } else if (!NAME_PATTERN.matcher(lastName).matches()) {
-            lastNameEditText.setError("First letter must be capital");
+            lastNameEditText.setError(ERROR_CAPITAL_LETTER_VALIDATION);
             return false;
         } else {
             return true;
         }
     }
 
-    private boolean validateEmail() {
+    private boolean isEmailValid() {
         String email = emailEditText.getText().toString();
         if (email.isEmpty()) {
-            emailEditText.setError("Please correctly fill out the field");
+            emailEditText.setError(ERROR_INPUT_VALIDATION);
             return false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailEditText.setError("Please enter a valid email");
+            emailEditText.setError(ERROR_EMAIL_VALIDATION);
             return false;
         } else {
             return true;
         }
     }
 
-    private boolean validatePhone() {
+    private boolean isPhoneValid() {
         String phone = phoneEditText.getText().toString();
         if (phone.isEmpty()) {
-            phoneEditText.setError("Please correctly fill out the field");
+            phoneEditText.setError(ERROR_INPUT_VALIDATION);
             return false;
         } else if (!Patterns.PHONE.matcher(phone).matches()) {
-            phoneEditText.setError("Please enter a valid phone");
+            phoneEditText.setError(ERROR_PHONE_VALIDATION);
             return false;
         } else {
             return true;
         }
     }
 
-    private boolean validatePassword() {
+    private boolean isPasswordValid() {
         String password = passwordEditText.getText().toString();
 
 
         if (password.isEmpty()) {
-            passwordEditText.setError("Please correctly fill out the field");
+            passwordEditText.setError(ERROR_INPUT_VALIDATION);
             return false;
         } else if (!PASSWORD_PATTERN.matcher(password).matches()) {
-            passwordEditText.setError("Password too weak");
+            passwordEditText.setError(ERROR_WEAK_PASSWORD_VALIDATION);
             return false;
         } else {
             return true;
@@ -144,15 +158,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private boolean validateSubmitPassword() {
+    private boolean isSubmitPasswordValid() {
         String submitPassword = submitPasswordEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
         if (submitPassword.isEmpty()) {
-            submitPasswordEditText.setError("Please correctly fill out the field");
+            submitPasswordEditText.setError(ERROR_INPUT_VALIDATION);
             return false;
         } else if (!password.equals(submitPassword)) {
-            submitPasswordEditText.setError("Password doesn't match");
+            submitPasswordEditText.setError(ERROR_MATCH_PASSWORD_VALIDATION);
             return false;
         } else {
             return true;
@@ -160,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void saveInfo() {
-        SharedPreferences sharedPref = getSharedPreferences("usersInfo", Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences(USERS_INFO_VALUE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         int count = sharedPref.getAll().size() + 1;
 
@@ -168,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         user.add("name: " + firstNameEditText.getText().toString());
         user.add("surname: " + lastNameEditText.getText().toString());
         user.add("phone: " + phoneEditText.getText().toString());
-        editor.putStringSet("user" + count, user);
+        editor.putStringSet(USER_KEY_VALUE + count, user);
         editor.apply();
     }
 
