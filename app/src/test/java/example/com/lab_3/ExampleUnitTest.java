@@ -1,4 +1,4 @@
-package c.e.a2lab;
+package example.com.lab_3;
 
 import org.junit.Test;
 
