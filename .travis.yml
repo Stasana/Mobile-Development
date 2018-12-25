@@ -1,40 +1,58 @@
 language: android
 jdk: oraclejdk8
+sudo: false
+
 env:
   global:
-  - ANDROID_API_LEVEL=28
-  - ANDROID_BUILD_TOOLS_VERSION=28.0.3
-before_cache:
-- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+    - ANDROID_API_LEVEL=28
+    - ANDROID_EMULATOR_LEVEL=18
+    - ANDROID_BUILD_TOOLS_VERSION=28.0.3
+    - ADB_INSTALL_TIMEOUT=20
+    - ANDROID_ABI=armeabi-v7a
+    - ANDROID_TAG=google_apis
+    - QEMU_AUDIO_DRV=none
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - tools
+    - build-tools-$ANDROID_BUILD_TOOLS_VERSION
+    - android-$ANDROID_API_LEVEL
+    - android-$ANDROID_EMULATOR_LEVEL
+    - extra-android-support
+    - extra-google-m2repository
+    - extra-android-m2repository
+    - sys-img-$ANDROID_ABI-google_apis-$ANDROID_EMULATOR_LEVEL
+
+licenses:
+  - android-sdk-preview-license-.+
+  - android-sdk-license-.+
+  - google-gdk-license-.+
+
 cache:
   directories:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
   - "$HOME/.android/build-cache"
-android:
-  components:
-  - tools
-  - platform-tools
-  - build-tools-$ANDROID_BUILD_TOOLS_VERSION
-  - android-$ANDROID_API_LEVEL
-  - extra-google-google_play_services
-  - extra-google-m2repository
-  - extra-android-m2repository
-  - addon-google_apis-google-$ANDROID_API_LEVEL
+
+before_install:
+  - chmod +x gradlew
+  - mkdir "$ANDROID_HOME/licenses" || true
+  - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+
+before_script:
+  - echo yes | sdkmanager "build-tools;27.0.3"
+  - chmod +x gradlew
+
 deploy:
   provider: releases
-  file: app/build/outputs/apk/debug/app-debug.apk
   skip_cleanup: true
+  overwrite: true
+  api_key: $GITHUB_API_KEY
+  file_glob: true
+  file: app/build/outputs/apk/debug/app-debug.apk
   on:
-    tags: false
+    repo: Stasana/Mobile-Development
     all_branches: true
-before_script:
-- echo yes | sdkmanager "build-tools;27.0.3"
-- chmod +x gradlew
-script:
-- "./gradlew build check --stacktrace"
-- "./gradlew assembleDebug"
-dd:
-  api_key: "$GITHUB_API_KEY"
-    secure: eAIGBJxzNjp+0voWzR+19sl0x5tfPEJooKzUS8x+AU9i7mi68nRGcqkw8tDiKRw22K6Db1PJsTGcV2CC6oraMn/EfNjVMH1tzm4r13wfN+d3VLZmcdFarpNfrtZgN2u5/8o6auBz/2u5g/RNKgoOFo61cYcGDMGMInE1PRCfB2q3qRUW24AcxCCyLpbqck6Z5KAoh686ioQV7hE3ZUih7JpMwAeerxFZY9pHdDDhdMDyT28Xr2yxTILY/SOUwlO+sY7sWVDeGaa8QZ/KNU0Pe5DXYJbyplVRwTcnuW64OBm1QxDv94ACD9U+x2sNbM3yTihu9swWK3+PgQ6UTCueyGaKMDAZQ24a1U3uQkBner0uSm8VhsVoub+HKtvHqVzbHXztLABMlUI959CZT5eUxc3JV1pKt7n8a/mJp/Mpki4XQ+4/hDlhsbSjeO39t2oA64pVG6zoMjReTJ6GgSv6lAAp3zM4bbLk2PWLh2MK68gQXyxz6H/XpXtuVTmvlR5mq01G96X/f00JosNLDLzTc9P7dkFWZb9hcdlCLYXNGPvGlR5DdbOKtMmnRL4KfPg2LQfSdJ4vlIK5SNBlnorUcG/WnYB+m86+UQLqZKo/07pLp8iB+p40gAWkw1UR/FblWBWgbl7+1lD225L6LT4Yukgnu3bDrvf6Nmpco5J7eJY=
