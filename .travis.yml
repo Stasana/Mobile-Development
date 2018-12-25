@@ -2,52 +2,39 @@ language: android
 jdk: oraclejdk8
 env:
   global:
-    - ANDROID_API_LEVEL=28
-    - ANDROID_BUILD_TOOLS_VERSION=28.0.3
-
+  - ANDROID_API_LEVEL=28
+  - ANDROID_BUILD_TOOLS_VERSION=28.0.3
 before_cache:
-  # Do not cache a few Gradle files/directories (see https://docs.travis-ci.com/user/languages/java/#Caching)
-  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
+- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    # Gradle dependencies
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-
-    # Android build cache (see http://tools.android.com/tech-docs/build-cache)
-    - $HOME/.android/build-cache
-
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+  - "$HOME/.android/build-cache"
 android:
   components:
-    - tools
-    - platform-tools
-    # The BuildTools version used by your project
-    - build-tools-$ANDROID_BUILD_TOOLS_VERSION
-    # The SDK version used to compile your project
-    - android-$ANDROID_API_LEVEL
-    # Additional components
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
-    - addon-google_apis-google-$ANDROID_API_LEVEL
-
+  - tools
+  - platform-tools
+  - build-tools-$ANDROID_BUILD_TOOLS_VERSION
+  - android-$ANDROID_API_LEVEL
+  - extra-google-google_play_services
+  - extra-google-m2repository
+  - extra-android-m2repository
+  - addon-google_apis-google-$ANDROID_API_LEVEL
 deploy:
   provider: releases
-  api_key:
-    secure: ${GITHUB_API_KEY}
-  file: "app/build/outputs/apk/debug/app-debug.apk"
+  file: app/build/outputs/apk/debug/app-debug.apk
   skip_cleanup: true
   on:
     tags: false
     all_branches: true
-
 before_script:
-  # Prepare pre-accepted licenses to not be promted at installation
-  - echo yes | sdkmanager "build-tools;27.0.3"
-  - chmod +x gradlew
-
+- echo yes | sdkmanager "build-tools;27.0.3"
+- chmod +x gradlew
 script:
-  - ./gradlew build check --stacktrace
-  - ./gradlew assembleDebug
+- "./gradlew build check --stacktrace"
+- "./gradlew assembleDebug"
+dd:
+  api_key:
+    secure: eAIGBJxzNjp+0voWzR+19sl0x5tfPEJooKzUS8x+AU9i7mi68nRGcqkw8tDiKRw22K6Db1PJsTGcV2CC6oraMn/EfNjVMH1tzm4r13wfN+d3VLZmcdFarpNfrtZgN2u5/8o6auBz/2u5g/RNKgoOFo61cYcGDMGMInE1PRCfB2q3qRUW24AcxCCyLpbqck6Z5KAoh686ioQV7hE3ZUih7JpMwAeerxFZY9pHdDDhdMDyT28Xr2yxTILY/SOUwlO+sY7sWVDeGaa8QZ/KNU0Pe5DXYJbyplVRwTcnuW64OBm1QxDv94ACD9U+x2sNbM3yTihu9swWK3+PgQ6UTCueyGaKMDAZQ24a1U3uQkBner0uSm8VhsVoub+HKtvHqVzbHXztLABMlUI959CZT5eUxc3JV1pKt7n8a/mJp/Mpki4XQ+4/hDlhsbSjeO39t2oA64pVG6zoMjReTJ6GgSv6lAAp3zM4bbLk2PWLh2MK68gQXyxz6H/XpXtuVTmvlR5mq01G96X/f00JosNLDLzTc9P7dkFWZb9hcdlCLYXNGPvGlR5DdbOKtMmnRL4KfPg2LQfSdJ4vlIK5SNBlnorUcG/WnYB+m86+UQLqZKo/07pLp8iB+p40gAWkw1UR/FblWBWgbl7+1lD225L6LT4Yukgnu3bDrvf6Nmpco5J7eJY=
