@@ -14,7 +14,7 @@ android:
     
 deploy:
   provider: releases
-  api_key: "$Git_key"
+  api_key: "$Travis_API"
   file: "app/build/outputs/apk/debug/app-debug.apk"
   skip_cleanup: true
   on:
