@@ -23,7 +23,6 @@ deploy:
 
 before_script:
   - echo yes | sdkmanager "build-tools;27.0.3"
-  - cd MobileDevelopmentMVP
   - chmod +x gradlew
 
 script: 
