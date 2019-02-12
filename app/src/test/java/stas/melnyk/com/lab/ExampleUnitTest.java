@@ -1,4 +1,4 @@
-package example.com.lab_3;
+package stas.melnyk.com.lab;
 
 import org.junit.Test;
 

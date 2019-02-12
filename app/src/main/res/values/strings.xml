@@ -1,11 +1,3 @@
 <resources>
-    <string name="app_name">AndroidApp</string>
-    <string name="firstName">First Name</string>
-    <string name="lastName">Last Name</string>
-    <string name="email">Email</string>
-    <string name="phone">Phone</string>
-    <string name="password">Password</string>
-    <string name="confirmPassword">Confirm password</string>
-    <string name="submit">Submit</string>
-    <string name="listView">List View</string>
+    <string name="app_name">lab5sofia</string>
 </resources>
